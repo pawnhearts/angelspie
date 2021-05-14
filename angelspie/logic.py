@@ -176,4 +176,5 @@ def rebind(*args):
         kb.unbind(bound.pop())
     for condition, key, then in bindings:
         if condition():
+            bound.append(key)
             kb.bind(key, lambda key: then())
