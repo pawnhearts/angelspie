@@ -49,7 +49,7 @@ def main():
     """Console script for ."""
     parser = argparse.ArgumentParser()
     # parser.add_argument('_', nargs='*')
-    parser.add_argument("-c", "--config", help="Path to config file", default=Path('~/..yaml'), type=Path)
+    parser.add_argument("-c", "--config", help="Path to config file", default=Path('~/.angelspie.yaml'), type=Path)
     parser.add_argument("--help-config", help="Help on config format", const='help', default='main', action='store_const', dest='command')
     parser.add_argument("--win-info", help="Info on window", const='wininfo', default='main', action='store_const', dest='command')
     args = parser.parse_args()
