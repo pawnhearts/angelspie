@@ -46,7 +46,7 @@ Possible keys inside "then" block:
 
 
 def main():
-    """Console script for ."""
+    """Console script for angelspie."""
     parser = argparse.ArgumentParser()
     # parser.add_argument('_', nargs='*')
     parser.add_argument("-c", "--config", help="Path to config file", default=Path('~/.angelspie.yaml'), type=Path)
