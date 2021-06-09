@@ -126,15 +126,18 @@ class If(IfWindow):
 
 class Then(WnckWindowActions, GdkWindowActions):
     def __init__(self, cfg):
-        for k in cfg:
-            if not hasattr(self, k):
-                vals = ', '.join(f for f, _ in inspect.getmembers(self) if not f.startswith('_'))
-                logger.error(f'Wrong action {k}. Possible values: {vals}')
+        cfg = [cfg] if hasattr(cfg, 'items') else list(map(dict, cfg))
+        for action in cfg:
+            for k in action:
+                if not hasattr(self, k):
+                    vals = ', '.join(f for f, _ in inspect.getmembers(self) if not f.startswith('_'))
+                    logger.error(f'Wrong action {k}. Possible values: {vals}')
         self.cfg = cfg
 
     def __call__(self):
-        for k, v in self.cfg.items():
-            getattr(self, k)(v)
+        for cfg in self.cfg:
+            for k, v in cfg.items():
+                getattr(self, k)(v)
 
     def sh(self, cmd):
         ''' Run shell command '''
