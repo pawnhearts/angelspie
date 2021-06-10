@@ -3,6 +3,7 @@
 """The setup script."""
 
 from setuptools import setup, find_packages
+from angelspie import __version__
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
@@ -47,6 +48,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/pawnhearts/angelspie',
-    version='0.1.4',
+    version=__version__,
     zip_safe=False,
 )

@@ -210,7 +210,8 @@ class Then(WnckWindowActions, GdkWindowActions):
     def __call__(self):
         for cfg in self.cfg:
             for k, v in cfg.items():
-                return getattr(self, k)(v) or True
+                getattr(self, k)(v)
+        return True
 
     def sh(self, cmd):
         ''' Run shell command '''
@@ -230,7 +231,9 @@ class Then(WnckWindowActions, GdkWindowActions):
 
     def sleep(self, s):
         ''' Sleep'''
+        print(s)
         time.sleep(float(s))
+        print(1)
 
     def press(self, key):
         ''' Emulate keypress '''
