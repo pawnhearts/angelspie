@@ -31,6 +31,11 @@ class Match:
             cfg = {'true': cfg}
         elif not isinstance(cfg, dict):
             cfg = {'eq': cfg}
+        for k, v in cfg.items():
+            if k == 'not':
+                for k2, v2 in v.items():
+                    cfg[f'{k2}_not'] = v2
+                del cfg['not']
         for k in cfg:
             if not hasattr(self, k):
                 vals = ', '.join(f for f in self.__class__.__dict__ if not f.startswith('_'))
@@ -45,58 +50,112 @@ class Match:
         ''' is true'''
         return bool(s)
     def contains(self, val, s):
-        ''' contains substring '''
+        ''' contains a substring '''
         s = str(s)
         return val in s
+    def contains_not(self, val, s):
+        ''' dons't contain a substring '''
+        s = str(s)
+        return val not in s
     def eq(self, val, k):
         ''' equals  '''
         val = type(k)(val)
         return k == val
+    def ne(self, val, k):
+        ''' not equal  '''
+        val = type(k)(val)
+        return k != val
+    def eq_not(self, val, k):
+        ''' not equal  '''
+        val = type(k)(val)
+        return k != val
     def re(self, val, k):
         ''' regexp '''
         return bool(re.search(val, str(k)))
+    def re_not(self, val, k):
+        ''' doesn't match regexp '''
+        return not self.re(val, k)
     def icontains(self, val, s):
-        ''' contains substring, ignore case '''
+        ''' contains a substring, ignore case '''
+        return val.lower() in str(s).lower()
+    def icontains_not(self, val, s):
+        ''' doesn't contain a substring, ignore case '''
         return val.lower() in str(s).lower()
     def ieq(self, val, k):
         ''' equals, ignore case '''
         return str(k).lower() == val.lower()
+    def ine(self, val, k):
+        ''' not equal, ignore case '''
+        return str(k).lower() != val.lower()
+    def ieq_not(self, val, k):
+        ''' not equal, ignore case '''
+        return str(k).lower() != val.lower()
     def ire(self, val, k):
         ''' regexp, ignore case '''
         return bool(re.search(val, str(k), re.IGNORECASE))
+    def ire_not(self, val, k):
+        ''' doesn't match regexp, ignore case '''
+        return not self.ire(val, k)
+
+
+def apply(func, arg):
+    try:
+        return func(arg)
+    except Exception as e:
+        logger.exception(e)
+
+
+
+DISABLED_RULES = set()
 
 
 class If(IfWindow):
 
-    def __init__(self, cfg, then):
+    def __init__(self, cfg, then, rule_name):
         self.then = then
+        self.rule_name = rule_name
         self.event = cfg.pop('event', 'active_window_changed')
         if 'key' in cfg:
             key = cfg.pop('key')
             bindings.append((self, key, then))
             self.event = 'key_pressed'
-        self.conditions = []
+        self.conditions = self._parse_config(cfg)
+
+
+    def _parse_config(self, cfg):
+        rule_list = []
         for k, v in cfg.items():
-            if k in ('sh', 'py'):
-                self.conditions.append((getattr(self, k), v))
+            if k in ('and', 'or'):
+                rule_list.append(({'and': self._and, 'or': self._or}[k], self._parse_config(v)))
+            elif k in ('sh', 'py'):
+                rule_list.append((getattr(self, k), v))
             elif hasattr(self, k):
-                self.conditions.append((Match(v), getattr(self, k)))
+                rule_list.append((Match(v), getattr(self, k)))
             else:
-                self.conditions.append((Match(v), self._custom(k)))
+                rule_list.append((Match(v), self._custom(k)))
+        return rule_list
+
 
     def _cb(self, event, *args):
         if event == self.event and self():
             self.then()
 
     def __call__(self):
-        for k, v in self.conditions:
-            v = v() if callable(v) else v
-            try:
-                if not k(v):
-                    return False
-            except Exception as e:
-                logger.exception(e)
-        return True
+        return self.rule_name not in DISABLED_RULES and self._and(self.conditions)
+
+
+    @staticmethod
+    def _and(conditions):
+        return all(apply(k, v() if callable(v) else v) for k, v in conditions)
+
+    @staticmethod
+    def _or(conditions):
+        return any(apply(k, v() if callable(v) else v) for k, v in conditions)
+
+    @staticmethod
+    def rule_enabled(rule_name):
+        ''' If rule is enabled '''
+        return rule_name not in DISABLED_RULES
 
     @staticmethod
     def sh(cmd):
@@ -172,6 +231,13 @@ class Then(WnckWindowActions, GdkWindowActions):
             logger.error('Click function requires python-xlib library')
             return
         click(int(button))
+
+    def enable(self, rule_name):
+        if rule_name in DISABLED_RULES:
+            DISABLED_RULES.remove(rule_name)
+
+    def disable(self, rule_name):
+        DISABLED_RULES.add(rule_name)
 
 
 def rebind(*args):
