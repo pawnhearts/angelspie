@@ -28,14 +28,15 @@ logger = logging.getLogger()
 class Match:
     def __init__(self, cfg):
         if not cfg:
-            cfg = {'true': cfg}
+            cfg = {'is_true': cfg}
         elif not isinstance(cfg, dict):
             cfg = {'eq': cfg}
-        for k, v in cfg.items():
-            if k == 'not':
-                for k2, v2 in v.items():
-                    cfg[f'{k2}_not'] = v2
-                del cfg['not']
+        # for k, v in list(cfg.items()):
+        #     if k == 'not':
+        #         for k2, v2 in v.items():
+        #             cfg[f'{k2}_not'] = v2
+        #         del cfg['not']
+
         for k in cfg:
             if not hasattr(self, k):
                 vals = ', '.join(f for f in self.__class__.__dict__ if not f.startswith('_'))
@@ -46,9 +47,15 @@ class Match:
             if not getattr(self, k)(v, val):
                 return False
         return True
-    def true(self, val, s):
-        ''' is true'''
+    def is_true(self, val, s):
+        ''' is is_true'''
         return bool(s)
+    def is_false(self, val, s):
+        ''' false '''
+        return not bool(s)
+    # def is_true_not(self, val, s):
+    #     ''' false '''
+    #     return not bool(s)
     def contains(self, val, s):
         ''' contains a substring '''
         s = str(s)
@@ -65,16 +72,16 @@ class Match:
         ''' not equal  '''
         val = type(k)(val)
         return k != val
-    def eq_not(self, val, k):
-        ''' not equal  '''
-        val = type(k)(val)
-        return k != val
+    # def eq_not(self, val, k):
+    #     ''' not equal  '''
+    #     val = type(k)(val)
+    #     return k != val
     def re(self, val, k):
         ''' regexp '''
         return bool(re.search(val, str(k)))
-    def re_not(self, val, k):
-        ''' doesn't match regexp '''
-        return not self.re(val, k)
+    # def re_not(self, val, k):
+    #     ''' doesn't match regexp '''
+    #     return not self.re(val, k)
     def icontains(self, val, s):
         ''' contains a substring, ignore case '''
         return val.lower() in str(s).lower()
@@ -121,6 +128,8 @@ class If(IfWindow):
             self.event = 'key_pressed'
         self.conditions = self._parse_config(cfg)
 
+    def __str__(self):
+        return self.rule_name
 
     def _parse_config(self, cfg):
         rule_list = []
@@ -138,11 +147,10 @@ class If(IfWindow):
 
     def _cb(self, event, *args):
         if event == self.event and self():
-            self.then()
+            return self.then()
 
     def __call__(self):
         return self.enabled and self._and(self.conditions)
-
 
     @staticmethod
     def _and(conditions):
@@ -177,26 +185,32 @@ class If(IfWindow):
             return str(obj)
         return cb
 
-    @classmethod
-    def _vars(cls):
-        return {k: getattr(cls, k)() for k, _ in inspect.getmembers(cls) if not k.startswith('_') and k not in ('sh', 'py')}
+    def _vars(self):
+        return {k: getattr(self, k)() for k, _ in inspect.getmembers(self.__class__) if not k.startswith('_') and k not in self.__class__.__dict__}
 
 
 class Then(WnckWindowActions, GdkWindowActions):
-    def __init__(self, cfg, rules):
+    def __init__(self, cfg, rule_name, rules):
+        self.rule_name = rule_name
         self.rules = rules
         cfg = [cfg] if hasattr(cfg, 'items') else list(map(dict, cfg))
         for action in cfg:
             for k in action:
                 if not hasattr(self, k):
-                    vals = ', '.join(f for f, _ in inspect.getmembers(self) if not f.startswith('_'))
+                    vals = ', '.join(self._actions())
                     logger.error(f'Wrong action {k}. Possible values: {vals}')
         self.cfg = cfg
+
+    def _vars(self):
+        return self.rules[self.rule_name]._vars()
+
+    def _actions(self):
+        return [f for f, _ in inspect.getmembers(self) if not f.startswith('_')]
 
     def __call__(self):
         for cfg in self.cfg:
             for k, v in cfg.items():
-                getattr(self, k)(v)
+                return getattr(self, k)(v) or True
 
     def sh(self, cmd):
         ''' Run shell command '''
@@ -204,11 +218,11 @@ class Then(WnckWindowActions, GdkWindowActions):
 
     def echo(self, s):
         ''' Print to stdout '''
-        print(s.format(**If._vars()))
+        print(s.format(**self._vars()))
 
     def debug(self, s):
         ''' Information about current window, etc '''
-        print(repr(If._vars()))
+        print(repr(self._vars()))
 
     def py(self, s):
         ''' Run python code '''
@@ -231,6 +245,9 @@ class Then(WnckWindowActions, GdkWindowActions):
             logger.error('Click function requires python-xlib library')
             return
         click(int(button))
+
+    def trigger(self, rule_name):
+        self.rules[rule_name].then()
 
     def enable(self, rule_name):
         self.rules[rule_name].enabled = True

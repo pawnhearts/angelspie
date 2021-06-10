@@ -12,47 +12,60 @@ gi.require_version('Wnck', '3.0')
 gi.require_version('Gdk', '3.0')
 gi.require_version('Gtk', '3.0')
 gi.require_version('Keybinder', '3.0')
-from gi.repository import Wnck, Gtk, Keybinder, Gdk
+gi.require_version('GObject', '2.0')
+from gi.repository import Wnck, Gtk, Keybinder, Gdk, GObject
 
 
 CONFIG_EXAMPLE = '''
 click_with_F1:
   if:
     key: F1
-  then::
+  then:
     click: 3
 
 print_debug:
   if:
-    event: active_window_changed
+      event:
   then:
     debug:
 
-need_F1_in_mc:
+win_changed:
+  if:
+    event: active_window_changed
+  then:
+    echo: "window changed {name} {class_group}"
+
+switched_to_xterm:
   if:
     name:
       contains: mc
-    class_group: xterm
+    class_group: XTerm
   then:
-    - disable: click_with_F1
+    - disable: win_changed
+    - trigger: print_debug
+
+timer_test:
+  if:
+    event: timer 5.0
+  then:
+    echo: tick
+
 
 need_F1_outside_mc:
   if:
-    any:
+    or:
       class_group:
         ne: xterm
       name:
-        not:
-          contains: mc
+        contains_not: mc
   then:
-    - enable: click_with_F1
+    - sh: date
 
 '''
 
 
 def convert_config_from_old_version(cfg):
     return {f'rule{i}': rule for i, rule in enumerate(cfg)}
-
 
 
 def loadconf(path='~/.angelspie.yaml'):
@@ -71,11 +84,14 @@ def loadconf(path='~/.angelspie.yaml'):
         cfg = convert_config_from_old_version(cfg)
 
     for rule_name, rule in cfg.items():
-        then = Then(rule.get('then', {}), rules)
+        then = Then(rule.get('then', {}), rule_name, rules)
         cond = If(rule.get('if', {}), then, rule_name, rules)
         rules[rule_name] = cond
-        if cond.event != 'key_pressed':
+        if cond.event == 'active_window_changed':
             scr.connect(cond.event, partial(cond._cb, 'active_window_changed'))
+        if cond.event.startswith('timer'):
+            secs = float(cond.event.split()[1])
+            GObject.timeout_add_seconds(secs, cond._cb, cond.event)
     if bindings:
         scr.connect('active_window_changed', rebind)
 
