@@ -25,8 +25,10 @@ def hold_button(key):
 
 
 def press(key):
-    keys = re.findall('([\w\d]+)', key)
-    for key, event in chain(zip(keys, repeat(X.KeyPress)), zip(reversed(keys), repeat(X.KeyRelease))):
+    keys = re.findall("([\w\d]+)", key)
+    for key, event in chain(
+        zip(keys, repeat(X.KeyPress)), zip(reversed(keys), repeat(X.KeyRelease))
+    ):
         number = display.keysym_to_keycode(XK.string_to_keysym(key))
         display.sync()
         fake_input(display, event, number, X.CurrentTime)
@@ -45,7 +47,7 @@ def click(button=1, x=0, y=0):
 def get_mouse_pos():
     display.sync()
     mpos = display.screen().root.query_pointer()._data
-    return mpos['root_x'], mpos['root_y']
+    return mpos["root_x"], mpos["root_y"]
 
 
 def set_mouse_pos(x, y):

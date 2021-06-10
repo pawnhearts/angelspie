@@ -4,19 +4,19 @@ from pathlib import Path
 import yaml
 
 
-
 from .logic import kb, bindings, If, Then, rebind
 
 import gi
-gi.require_version('Wnck', '3.0')
-gi.require_version('Gdk', '3.0')
-gi.require_version('Gtk', '3.0')
-gi.require_version('Keybinder', '3.0')
-gi.require_version('GObject', '2.0')
+
+gi.require_version("Wnck", "3.0")
+gi.require_version("Gdk", "3.0")
+gi.require_version("Gtk", "3.0")
+gi.require_version("Keybinder", "3.0")
+gi.require_version("GObject", "2.0")
 from gi.repository import Wnck, Gtk, Keybinder, Gdk, GObject
 
 
-CONFIG_EXAMPLE = '''
+CONFIG_EXAMPLE = """
 click_with_F1:
   if:
     key: F1
@@ -83,14 +83,14 @@ not_in_mc:
     - sh: date
     - py: from datetime import datetime;print(datetime.now())
 
-'''
+"""
 
 
 def convert_config_from_old_version(cfg):
-    return {f'rule{i}': rule for i, rule in enumerate(cfg)}
+    return {f"rule{i}": rule for i, rule in enumerate(cfg)}
 
 
-def loadconf(path='~/.angelspie.yaml'):
+def loadconf(path="~/.angelspie.yaml"):
     path = Path(path).expanduser()
     scr = Wnck.Screen.get_default()
     kb.init()
@@ -101,21 +101,19 @@ def loadconf(path='~/.angelspie.yaml'):
     cfg = yaml.load(path.open(), Loader=yaml.FullLoader)
     rules = {}
 
-
     if isinstance(cfg, list):
         cfg = convert_config_from_old_version(cfg)
 
     for rule_name, rule in cfg.items():
-        then = Then(rule.get('then', {}), rule_name, rules)
-        cond = If(rule.get('if', {}), then, rule_name, rules)
+        then = Then(rule.get("then", {}), rule_name, rules)
+        cond = If(rule.get("if", {}), then, rule_name, rules)
         rules[rule_name] = cond
-        if cond.event == 'active_window_changed':
-            scr.connect(cond.event, partial(cond._cb, 'active_window_changed'))
-        if cond.event.startswith('timer'):
+        if cond.event == "active_window_changed":
+            scr.connect(cond.event, partial(cond._cb, "active_window_changed"))
+        if cond.event.startswith("timer"):
             secs = float(cond.event.split()[1])
             GObject.timeout_add_seconds(secs, cond._cb, cond.event)
     if bindings:
-        scr.connect('active_window_changed', rebind)
+        scr.connect("active_window_changed", rebind)
 
     return rules
-

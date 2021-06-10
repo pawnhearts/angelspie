@@ -43,10 +43,10 @@ def addrule():
                     "class_group": win.get_class_group_name(),
                 },
                 "then": {
-                    'echo': 'window {name}',
-                    'move': f'{geo[0]} {geo[1]}',
-                    'resize': f'{geo[2]} {geo[3]}'
-        },
+                    "echo": "window {name}",
+                    "move": f"{geo[0]} {geo[1]}",
+                    "resize": f"{geo[2]} {geo[3]}",
+                },
             }
         }
         sys.stdout.write(os.linesep)
