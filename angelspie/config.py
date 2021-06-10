@@ -23,12 +23,39 @@ click_with_F1:
   then:
     click: 3
 
+@ Pressing F2 on an image in chrome would do right-click, v(save as). Then it enables auto-saving rule.
+save_image:
+  if:
+    key: F2
+    class_group: Google-chrome
+  then:
+    - click: 3
+    - sleep: 0.1
+    - press: v
+    - enable: autosave
+    
+# Would type "filename" and press alt+s to save when Save file dialog of chrome appears. But only after we pressed F2.
+autosave:
+  if:
+    name: Save File
+    class_group: Google-chrome
+    enabled: false
+  then:
+    - press: f i l e n a m e Alt+S
+
+# Disable autosaving every 2 secs.
+timer_test:
+  if:
+    event: timer 2
+  then:
+    disable: autosave
+
 print_debug:
   if:
-      event:
+      event: never
   then:
     debug:
-
+    
 win_changed:
   if:
     event: active_window_changed
@@ -41,17 +68,11 @@ switched_to_xterm:
       contains: mc
     class_group: XTerm
   then:
+    - maximize:
     - disable: win_changed
     - trigger: print_debug
 
-timer_test:
-  if:
-    event: timer 5.0
-  then:
-    echo: tick
-
-
-need_F1_outside_mc:
+not_in_mc:
   if:
     or:
       class_group:

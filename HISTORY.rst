@@ -2,6 +2,14 @@
 History
 =======
 
+0.1.6 (2021-06-10)
+------------------
+
+- fixed bugs
+- better config example
+- can send multiple keystrokes with one 'press:' directive
+- after rule is enabled/disabled - rebind keys.
+
 0.1.5 (2021-06-10)
 ------------------
 

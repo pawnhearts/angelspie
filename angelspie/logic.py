@@ -240,7 +240,8 @@ class Then(WnckWindowActions, GdkWindowActions):
         if press is None:
             logger.error('Press function requires python-xlib library')
             return
-        press(key)
+        for key in key.split():
+            press(key)
 
     def click(self, button):
         ''' Emulate mouse click '''
@@ -254,9 +255,11 @@ class Then(WnckWindowActions, GdkWindowActions):
 
     def enable(self, rule_name):
         self.rules[rule_name].enabled = True
+        rebind()
 
     def disable(self, rule_name):
         self.rules[rule_name].enabled = False
+        rebind()
 
 
 def rebind(*args):
