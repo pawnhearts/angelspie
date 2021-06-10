@@ -212,34 +212,36 @@ class Then(WnckWindowActions, GdkWindowActions):
         return [f for f, _ in inspect.getmembers(self) if not f.startswith('_')]
 
     def __call__(self):
-        for cfg in self.cfg:
-            for k, v in cfg.items():
-                getattr(self, k)(v)
-        return True
+        windows = [scr.get_active_window()]  # or self.rules[self.rule_name].find_matching_windows()
+        for win in windows:
+            for cfg in self.cfg:
+                for k, v in cfg.items():
+                    getattr(self, k)(v, win)
+            return True
 
-    def sh(self, cmd):
+    def sh(self, cmd, win=None):
         ''' Run shell command '''
         os.system(cmd)
 
-    def echo(self, s):
+    def echo(self, s, win=None):
         ''' Print to stdout '''
         print(s.format(**self._vars()))
 
-    def debug(self, s):
+    def debug(self, s, win=None):
         ''' Information about current window, etc '''
         print(repr(self._vars()))
 
-    def py(self, s):
+    def py(self, s, win=None):
         ''' Run python code '''
         return eval(compile(s, 'angelspie.py', 'exec'))
 
-    def sleep(self, s):
+    def sleep(self, s, win=None):
         ''' Sleep'''
         print(s)
         time.sleep(float(s))
         print(1)
 
-    def press(self, key):
+    def press(self, key, win=None):
         ''' Emulate keypress '''
         if press is None:
             logger.error('Press function requires python-xlib library')
@@ -247,21 +249,21 @@ class Then(WnckWindowActions, GdkWindowActions):
         for key in key.split():
             press(key)
 
-    def click(self, button):
+    def click(self, button, win=None):
         ''' Emulate mouse click '''
         if click is None:
             logger.error('Click function requires python-xlib library')
             return
         click(int(button))
 
-    def trigger(self, rule_name):
+    def trigger(self, rule_name, win=None):
         self.rules[rule_name].then()
 
-    def enable(self, rule_name):
+    def enable(self, rule_name, win=None):
         self.rules[rule_name].enabled = True
         rebind()
 
-    def disable(self, rule_name):
+    def disable(self, rule_name, win=None):
         self.rules[rule_name].enabled = False
         rebind()
 
