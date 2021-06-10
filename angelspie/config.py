@@ -81,6 +81,7 @@ not_in_mc:
         contains_not: mc
   then:
     - sh: date
+    - py: from datetime import datetime;print(datetime.now())
 
 '''
 

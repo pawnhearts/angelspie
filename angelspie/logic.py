@@ -168,10 +168,11 @@ class If(IfWindow):
     def sh(cmd):
         ''' If shell comannd has exitcode 0 '''
         return not os.system(cmd)
+
     @staticmethod
     def py(cmd):
         ''' Eval python code '''
-        return eval(cmd)
+        return eval(compile(cmd, 'angelspie.py', 'exec'))
 
     def _custom(self, key):
         ''' run chain of methods like scr.get_active_window.get_application.get_name '''
@@ -227,7 +228,7 @@ class Then(WnckWindowActions, GdkWindowActions):
 
     def py(self, s):
         ''' Run python code '''
-        eval(s)
+        return eval(compile(s, 'angelspie.py', 'exec'))
 
     def sleep(self, s):
         ''' Sleep'''
