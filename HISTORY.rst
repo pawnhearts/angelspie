@@ -6,6 +6,7 @@ History
 ------------------
 
 - add-rule command line option, which generates yaml for next window you select.
+- window: matching options to apply actions to all windows which match if conditions
 
 0.1.7 (2021-06-10)
 ------------------
