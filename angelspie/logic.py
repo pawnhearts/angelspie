@@ -105,9 +105,9 @@ class Match:
         return not self.ire(val, k)
 
 
-def apply(func, arg):
+def apply(func, *args):
     try:
-        return func(arg)
+        return func(*args)
     except Exception as e:
         logger.exception(e)
 
@@ -152,13 +152,16 @@ class If(IfWindow):
     def __call__(self):
         return self.enabled and self._and(self.conditions)
 
-    @staticmethod
-    def _and(conditions):
-        return all(apply(k, v() if callable(v) else v) for k, v in conditions)
+    def find_matching_windows(self):
+        return [win for win in scr.get_windows() if self._and(self.conditions, win)]
 
     @staticmethod
-    def _or(conditions):
-        return any(apply(k, v() if callable(v) else v) for k, v in conditions)
+    def _and(conditions, win=None):
+        return all(apply(k, v(win) if callable(v) else v) for k, v in conditions)
+
+    @staticmethod
+    def _or(conditions, win=None):
+        return any(apply(k, v(win) if callable(v) else v) for k, v in conditions)
 
     def rule_enabled(self, rule_name):
         ''' If rule is enabled '''
