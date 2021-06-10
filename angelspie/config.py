@@ -63,16 +63,21 @@ def loadconf(path='~/.angelspie.yaml'):
     if not path.exists():
         path.write_text(CONFIG_EXAMPLE)
 
-    rules = yaml.load(path.open(), Loader=yaml.FullLoader)
+    cfg = yaml.load(path.open(), Loader=yaml.FullLoader)
+    rules = {}
 
-    if isinstance(rules, list):
-        rules = convert_config_from_old_version(rules)
 
-    for rule_name, rule in rules.items():
-        then = Then(rule.get('then', {}))
-        cond = If(rule.get('if', {}), then, rule_name)
+    if isinstance(cfg, list):
+        cfg = convert_config_from_old_version(cfg)
+
+    for rule_name, rule in cfg.items():
+        then = Then(rule.get('then', {}), rules)
+        cond = If(rule.get('if', {}), then, rule_name, rules)
+        rules[rule_name] = cond
         if cond.event != 'key_pressed':
             scr.connect(cond.event, partial(cond._cb, 'active_window_changed'))
     if bindings:
         scr.connect('active_window_changed', rebind)
+
+    return rules
 

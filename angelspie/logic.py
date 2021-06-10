@@ -106,12 +106,12 @@ def apply(func, arg):
 
 
 
-DISABLED_RULES = set()
-
 
 class If(IfWindow):
 
-    def __init__(self, cfg, then, rule_name):
+    def __init__(self, cfg, then, rule_name, rules):
+        self.enabled = bool(cfg.pop('enabled', True))
+        self.rules = rules
         self.then = then
         self.rule_name = rule_name
         self.event = cfg.pop('event', 'active_window_changed')
@@ -141,7 +141,7 @@ class If(IfWindow):
             self.then()
 
     def __call__(self):
-        return self.rule_name not in DISABLED_RULES and self._and(self.conditions)
+        return self.enabled and self._and(self.conditions)
 
 
     @staticmethod
@@ -152,10 +152,9 @@ class If(IfWindow):
     def _or(conditions):
         return any(apply(k, v() if callable(v) else v) for k, v in conditions)
 
-    @staticmethod
-    def rule_enabled(rule_name):
+    def rule_enabled(self, rule_name):
         ''' If rule is enabled '''
-        return rule_name not in DISABLED_RULES
+        return self.rules[rule_name].enabled
 
     @staticmethod
     def sh(cmd):
@@ -184,7 +183,8 @@ class If(IfWindow):
 
 
 class Then(WnckWindowActions, GdkWindowActions):
-    def __init__(self, cfg):
+    def __init__(self, cfg, rules):
+        self.rules = rules
         cfg = [cfg] if hasattr(cfg, 'items') else list(map(dict, cfg))
         for action in cfg:
             for k in action:
@@ -233,11 +233,10 @@ class Then(WnckWindowActions, GdkWindowActions):
         click(int(button))
 
     def enable(self, rule_name):
-        if rule_name in DISABLED_RULES:
-            DISABLED_RULES.remove(rule_name)
+        self.rules[rule_name].enabled = True
 
     def disable(self, rule_name):
-        DISABLED_RULES.add(rule_name)
+        self.rules[rule_name].enabled = False
 
 
 def rebind(*args):
