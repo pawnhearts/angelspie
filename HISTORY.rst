@@ -2,6 +2,11 @@
 History
 =======
 
+0.1.8 (2021-06-10)
+------------------
+
+- add-rule command line option, which generates yaml for next window you select.
+
 0.1.7 (2021-06-10)
 ------------------
 
