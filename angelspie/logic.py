@@ -122,6 +122,7 @@ class If(IfWindow):
         self.then = then
         self.rule_name = rule_name
         self.event = cfg.pop('event', 'active_window_changed')
+        self.window = cfg.pop('window', 'active')
         if 'key' in cfg:
             key = cfg.pop('key')
             bindings.append((self, key, then))
@@ -205,14 +206,18 @@ class Then(WnckWindowActions, GdkWindowActions):
                     logger.error(f'Wrong action {k}. Possible values: {vals}')
         self.cfg = cfg
 
+    @property
+    def cond(self):
+        return self.rules[self.rule_name]
+
     def _vars(self):
-        return self.rules[self.rule_name]._vars()
+        return self.cond._vars()
 
     def _actions(self):
         return [f for f, _ in inspect.getmembers(self) if not f.startswith('_')]
 
     def __call__(self):
-        windows = [scr.get_active_window()]  # or self.rules[self.rule_name].find_matching_windows()
+        windows = [scr.get_active_window()] if self.cond.window == 'active' else self.cond.find_matching_windows()
         for win in windows:
             for cfg in self.cfg:
                 for k, v in cfg.items():
