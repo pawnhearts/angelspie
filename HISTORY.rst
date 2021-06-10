@@ -2,6 +2,18 @@
 History
 =======
 
+------------------
+0.1.4 (2021-06-10)
+------------------
+
+- changed config format
+- added timer events
+- added negative conditions like "ne' for not-equal
+- added and/or logic in config
+
+
+
+------------------
 0.1.2 (2021-06-09)
 ------------------
 
