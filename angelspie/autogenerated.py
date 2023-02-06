@@ -404,36 +404,43 @@ class WnckWindowActions:
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).minimize() or ""
+        callable(cb) and cb(()
 
     def make_below(self, arg, win=None, cb=None):
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).make_below() or ""
+        callable(cb) and cb(()
 
     def make_above(self, arg, win=None, cb=None):
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).make_above() or ""
+        callable(cb) and cb(()
 
     def unmake_below(self, arg, win=None, cb=None):
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).unmake_below() or ""
+        callable(cb) and cb(()
 
     def maximize(self, arg, win=None, cb=None):
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).maximize() or ""
+        callable(cb) and cb(()
 
     def unshade(self, arg, win=None, cb=None):
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).unshade() or ""
+        callable(cb) and cb(()
 
     def pin(self, arg, win=None, cb=None):
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).pin() or ""
+        callable(cb) and cb(()
 
     def set_sort_order(self, arg, win=None, cb=None):
         order = arg.split()
@@ -441,17 +448,20 @@ class WnckWindowActions:
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).set_sort_order(order) or ""
+        callable(cb) and cb(()
 
     def stick(self, arg, win=None, cb=None):
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).stick() or ""
+        callable(cb) and cb(()
 
     def set_fullscreen(self, arg, win=None, cb=None):
         fullscreen = arg.split()
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).set_fullscreen(fullscreen) or ""
+        callable(cb) and cb(()
 
     def set_geometry(self, arg, win=None, cb=None):
         gravity, geometry_mask, x, y, width, height = arg.split()
@@ -472,17 +482,20 @@ class WnckWindowActions:
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).set_geometry(gravity, geometry_mask, x, y, width, height) or ""
+        callable(cb) and cb(()
 
     def maximize_vertically(self, arg, win=None, cb=None):
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).maximize_vertically() or ""
+        callable(cb) and cb(()
 
     def set_skip_pager(self, arg, win=None, cb=None):
         skip = arg.split()
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).set_skip_pager(skip) or ""
+        callable(cb) and cb(()
 
     def set_icon_geometry(self, arg, win=None, cb=None):
         x, y, width, height = arg.split()
@@ -493,11 +506,13 @@ class WnckWindowActions:
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).set_icon_geometry(x, y, width, height) or ""
+        callable(cb) and cb(()
 
     def unpin(self, arg, win=None, cb=None):
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).unpin() or ""
+        callable(cb) and cb(()
 
     def activate(self, arg, win=None, cb=None):
         timestamp = arg.split()
@@ -505,6 +520,7 @@ class WnckWindowActions:
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).activate(timestamp) or ""
+        callable(cb) and cb(()
 
     def unminimize(self, arg, win=None, cb=None):
         timestamp = arg.split()
@@ -512,6 +528,7 @@ class WnckWindowActions:
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).unminimize(timestamp) or ""
+        callable(cb) and cb(()
 
     def move_to_workspace(self, arg, win=None, cb=None):
         space = arg.split()
@@ -521,6 +538,7 @@ class WnckWindowActions:
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).move_to_workspace(space) or ""
+        callable(cb) and cb(()
 
     def set_window_type(self, arg, win=None, cb=None):
         wintype = arg.split()
@@ -532,11 +550,13 @@ class WnckWindowActions:
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).set_window_type(wintype) or ""
+        callable(cb) and cb(()
 
     def maximize_horizontally(self, arg, win=None, cb=None):
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).maximize_horizontally() or ""
+        callable(cb) and cb(()
 
     def close(self, arg, win=None, cb=None):
         timestamp = arg.split()
@@ -544,42 +564,50 @@ class WnckWindowActions:
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).close(timestamp) or ""
+        callable(cb) and cb(()
 
     def unstick(self, arg, win=None, cb=None):
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).unstick() or ""
+        callable(cb) and cb(()
 
     def unmaximize(self, arg, win=None, cb=None):
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).unmaximize() or ""
+        callable(cb) and cb(()
 
     def unmake_above(self, arg, win=None, cb=None):
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).unmake_above() or ""
+        callable(cb) and cb(()
 
     def shade(self, arg, win=None, cb=None):
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).shade() or ""
+        callable(cb) and cb(()
 
     def unmaximize_horizontally(self, arg, win=None, cb=None):
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).unmaximize_horizontally() or ""
+        callable(cb) and cb(()
 
     def set_skip_tasklist(self, arg, win=None, cb=None):
         skip = arg.split()
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).set_skip_tasklist(skip) or ""
+        callable(cb) and cb(()
 
     def unmaximize_vertically(self, arg, win=None, cb=None):
         (win or wnck_screen.get_active_window()) and (
             win or wnck_screen.get_active_window()
         ).unmaximize_vertically() or ""
+        callable(cb) and cb(()
 
 
 for name, func in inspect.getmembers(WnckWindowActions):
@@ -596,16 +624,19 @@ class GdkWindowActions:
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).set_group(leader) or ""
+        callable(cb) and cb(()
 
     def show_unraised(self, arg, win=None, cb=None):
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).show_unraised() or ""
+        callable(cb) and cb(()
 
     def fullscreen(self, arg, win=None, cb=None):
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).fullscreen() or ""
+        callable(cb) and cb(()
 
     def move_to_rect(self, arg, win=None, cb=None):
         (
@@ -644,11 +675,13 @@ class GdkWindowActions:
             rect_anchor_dx,
             rect_anchor_dy,
         )
+        callable(cb) and cb(()
 
     def raise_(self, arg, win=None, cb=None):
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).raise_() or ""
+        callable(cb) and cb(()
 
     def set_geometry_hints(self, arg, win=None, cb=None):
         geometry, geom_mask = arg.split()
@@ -665,12 +698,14 @@ class GdkWindowActions:
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).set_geometry_hints(geometry, geom_mask) or ""
+        callable(cb) and cb(()
 
     def set_skip_pager_hint(self, arg, win=None, cb=None):
         skips_pager = arg.split()
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).set_skip_pager_hint(skips_pager) or ""
+        callable(cb) and cb(()
 
     def move(self, arg, win=None, cb=None):
         x, y = arg.split()
@@ -679,27 +714,32 @@ class GdkWindowActions:
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).move(x, y) or ""
+        callable(cb) and cb(()
 
     def set_title(self, arg, win=None, cb=None):
         title = arg.split()
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).set_title(title) or ""
+        callable(cb) and cb(()
 
     def iconify(self, arg, win=None, cb=None):
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).iconify() or ""
+        callable(cb) and cb(()
 
     def maximize(self, arg, win=None, cb=None):
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).maximize() or ""
+        callable(cb) and cb(()
 
     def withdraw(self, arg, win=None, cb=None):
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).withdraw() or ""
+        callable(cb) and cb(()
 
     def set_type_hint(self, arg, win=None, cb=None):
         hint = arg.split()
@@ -709,27 +749,32 @@ class GdkWindowActions:
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).set_type_hint(hint) or ""
+        callable(cb) and cb(()
 
     def set_skip_taskbar_hint(self, arg, win=None, cb=None):
         skips_taskbar = arg.split()
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).set_skip_taskbar_hint(skips_taskbar) or ""
+        callable(cb) and cb(()
 
     def hide(self, arg, win=None, cb=None):
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).hide() or ""
+        callable(cb) and cb(()
 
     def stick(self, arg, win=None, cb=None):
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).stick() or ""
+        callable(cb) and cb(()
 
     def show(self, arg, win=None, cb=None):
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).show() or ""
+        callable(cb) and cb(()
 
     def set_functions(self, arg, win=None, cb=None):
         functions = arg.split()
@@ -741,41 +786,48 @@ class GdkWindowActions:
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).set_functions(functions) or ""
+        callable(cb) and cb(()
 
     def destroy(self, arg, win=None, cb=None):
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).destroy() or ""
+        callable(cb) and cb(()
 
     def set_icon_name(self, arg, win=None, cb=None):
         name = arg.split()
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).set_icon_name(name) or ""
+        callable(cb) and cb(()
 
     def set_composited(self, arg, win=None, cb=None):
         composited = arg.split()
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).set_composited(composited) or ""
+        callable(cb) and cb(()
 
     def set_keep_below(self, arg, win=None, cb=None):
         setting = arg.split()
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).set_keep_below(setting) or ""
+        callable(cb) and cb(()
 
     def set_accept_focus(self, arg, win=None, cb=None):
         accept_focus = arg.split()
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).set_accept_focus(accept_focus) or ""
+        callable(cb) and cb(()
 
     def set_role(self, arg, win=None, cb=None):
         role = arg.split()
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).set_role(role) or ""
+        callable(cb) and cb(()
 
     def set_opacity(self, arg, win=None, cb=None):
         opacity = arg.split()
@@ -783,6 +835,7 @@ class GdkWindowActions:
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).set_opacity(opacity) or ""
+        callable(cb) and cb(()
 
     def resize(self, arg, win=None, cb=None):
         width, height = arg.split()
@@ -791,22 +844,26 @@ class GdkWindowActions:
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).resize(width, height) or ""
+        callable(cb) and cb(()
 
     def beep(self, arg, win=None, cb=None):
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).beep() or ""
+        callable(cb) and cb(()
 
     def unfullscreen(self, arg, win=None, cb=None):
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).unfullscreen() or ""
+        callable(cb) and cb(()
 
     def set_modal_hint(self, arg, win=None, cb=None):
         modal = arg.split()
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).set_modal_hint(modal) or ""
+        callable(cb) and cb(()
 
     def focus(self, arg, win=None, cb=None):
         timestamp = arg.split()
@@ -814,6 +871,7 @@ class GdkWindowActions:
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).focus(timestamp) or ""
+        callable(cb) and cb(()
 
     def show_window_menu(self, arg, win=None, cb=None):
         event = arg.split()
@@ -821,16 +879,19 @@ class GdkWindowActions:
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).show_window_menu(event) or ""
+        callable(cb) and cb(()
 
     def unstick(self, arg, win=None, cb=None):
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).unstick() or ""
+        callable(cb) and cb(()
 
     def unmaximize(self, arg, win=None, cb=None):
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).unmaximize() or ""
+        callable(cb) and cb(()
 
     def move_resize(self, arg, win=None, cb=None):
         x, y, width, height = arg.split()
@@ -841,6 +902,7 @@ class GdkWindowActions:
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).move_resize(x, y, width, height) or ""
+        callable(cb) and cb(()
 
     def set_fullscreen_mode(self, arg, win=None, cb=None):
         mode = arg.split()
@@ -850,22 +912,26 @@ class GdkWindowActions:
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).set_fullscreen_mode(mode) or ""
+        callable(cb) and cb(()
 
     def set_keep_above(self, arg, win=None, cb=None):
         setting = arg.split()
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).set_keep_above(setting) or ""
+        callable(cb) and cb(()
 
     def deiconify(self, arg, win=None, cb=None):
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).deiconify() or ""
+        callable(cb) and cb(()
 
     def lower(self, arg, win=None, cb=None):
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).lower() or ""
+        callable(cb) and cb(()
 
     def set_shadow_width(self, arg, win=None, cb=None):
         left, right, top, bottom = arg.split()
@@ -876,12 +942,14 @@ class GdkWindowActions:
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).set_shadow_width(left, right, top, bottom) or ""
+        callable(cb) and cb(()
 
     def set_urgency_hint(self, arg, win=None, cb=None):
         urgent = arg.split()
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).set_urgency_hint(urgent) or ""
+        callable(cb) and cb(()
 
     def fullscreen_on_monitor(self, arg, win=None, cb=None):
         monitor = arg.split()
@@ -889,6 +957,7 @@ class GdkWindowActions:
         (win or gdk_screen.get_active_window()) and (
             win or gdk_screen.get_active_window()
         ).fullscreen_on_monitor(monitor) or ""
+        callable(cb) and cb(()
 
     def restack(self, arg, win=None, cb=None):
         sibling, above = arg.split()
@@ -903,3 +972,4 @@ class GdkWindowActions:
 for name, func in inspect.getmembers(GdkWindowActions):
     if not name.startswith("_"):
         func.__doc__ = getattr(Gdk.Window, name).__doc__
+        callable(cb) and cb(()
