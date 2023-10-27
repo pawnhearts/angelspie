@@ -275,17 +275,17 @@ class Then(WnckWindowActions, GdkWindowActions):
     def echo(self, s, win=None, cb=None):
         """Print to stdout"""
         print(s.format(**self._vars()))
-        callable(cb) and cb(()
+        callable(cb) and cb()
 
     def debug(self, s, win=None, cb=None):
         """Information about current window, etc"""
         print(repr(self._vars()))
-        callable(cb) and cb(()
+        callable(cb) and cb()
 
     def py(self, s, win=None, cb=None):
         """Run python code"""
         res = eval(compile(s, "angelspie.py", "exec"))
-        callable(cb) and cb(()
+        callable(cb) and cb()
 
     def sleep(self, s, win=None, cb=None):
         """Sleep"""
@@ -300,7 +300,7 @@ class Then(WnckWindowActions, GdkWindowActions):
             return
         for key in key.split():
             press(key)
-        callable(cb) and cb(()
+        callable(cb) and cb()
 
     def click(self, button, win=None, cb=None):
         """Emulate mouse click"""
@@ -308,21 +308,21 @@ class Then(WnckWindowActions, GdkWindowActions):
             logger.error("Click function requires python-xlib library")
             return
         click(int(button))
-        callable(cb) and cb(()
+        callable(cb) and cb()
 
     def trigger(self, rule_name, win=None, cb=None):
         self.rules[rule_name].then()
-        callable(cb) and cb(()
+        callable(cb) and cb()
 
     def enable(self, rule_name, win=None, cb=None):
         self.rules[rule_name].enabled = True
         rebind()
-        callable(cb) and cb(()
+        callable(cb) and cb()
 
     def disable(self, rule_name, win=None, cb=None):
         self.rules[rule_name].enabled = False
         rebind()
-        callable(cb) and cb(()
+        callable(cb) and cb()
 
 
 def rebind(*args):
