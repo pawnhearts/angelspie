@@ -24,12 +24,12 @@ class IfWindow:
     @staticmethod
     def mouse_x():
         """Mouse x"""
-        return get_mouse_pos()[0]
+        return get_mouse_pos and get_mouse_pos()[0]
 
     @staticmethod
     def mouse_y():
         """Mouse y"""
-        return get_mouse_pos()[1]
+        return get_mouse_pos and get_mouse_pos()[1]
 
     @staticmethod
     def name(win=None):
