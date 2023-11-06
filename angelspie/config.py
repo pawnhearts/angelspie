@@ -23,7 +23,7 @@ click_with_F1:
   then:
     click: 3
 
-@ Pressing F2 on an image in chrome would do right-click, v(save as). Then it enables auto-saving rule.
+# Pressing F2 on an image in chrome would do right-click, v(save as). Then it enables auto-saving rule.
 save_image:
   if:
     key: F2
