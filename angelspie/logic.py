@@ -174,11 +174,11 @@ class If(IfWindow):
         return [win for win in scr.get_windows() if self._and(self.conditions, win)]
 
     @staticmethod
-    def _and(conditions, win=None, cb=None):
+    def _and(conditions, win=None):
         return all(apply(k, v(win) if callable(v) else v) for k, v in conditions)
 
     @staticmethod
-    def _or(conditions, win=None, cb=None):
+    def _or(conditions, win=None):
         return any(apply(k, v(win) if callable(v) else v) for k, v in conditions)
 
     def rule_enabled(self, rule_name):
@@ -252,77 +252,59 @@ class Then(WnckWindowActions, GdkWindowActions):
             if self.cond.window == "active"
             else self.cond.find_matching_windows()
         )
-
-        chain = []
-        def do_next(*args):
-            if chain:
-                chain.pop(0)()
-
         for win in windows:
             for cfg in self.cfg:
                 for k, v in cfg.items():
-                    chain.append(partial(getattr(self, k), v, win, do_next))
-                    # getattr(self, k)(v, win)
-            do_next()
-
+                    getattr(self, k)(v, win)
             return True
 
-    def sh(self, cmd, win=None, cb=None):
+    def sh(self, cmd, win=None):
         """Run shell command"""
-        p = Gio.Subprocess.new(['sh', '-c', cmd], 0)
-        p.wait_async(None, cb)
+        Gio.Subprocess.new(['sh', '-c', cmd], 0)
 
-    def echo(self, s, win=None, cb=None):
+    def echo(self, s, win=None):
         """Print to stdout"""
         print(s.format(**self._vars()))
-        callable(cb) and cb()
 
-    def debug(self, s, win=None, cb=None):
+    def debug(self, s, win=None):
         """Information about current window, etc"""
         print(repr(self._vars()))
-        callable(cb) and cb()
 
-    def py(self, s, win=None, cb=None):
+    def py(self, s, win=None):
         """Run python code"""
-        res = eval(compile(s, "angelspie.py", "exec"))
-        callable(cb) and cb()
+        return eval(compile(s, "angelspie.py", "exec"))
 
-    def sleep(self, s, win=None, cb=None):
+    def sleep(self, s, win=None):
         """Sleep"""
+        print(s)
+        time.sleep(float(s))
+        print(1)
 
-        GLib.timeout_add(float(s)*1000, cb)
-        #time.sleep(float(s))
-
-    def press(self, key, win=None, cb=None):
+    def press(self, key, win=None):
         """Emulate keypress"""
         if press is None:
             logger.error("Press function requires python-xlib library")
             return
         for key in key.split():
             press(key)
-        callable(cb) and cb()
 
-    def click(self, button, win=None, cb=None):
+    def click(self, button, win=None):
         """Emulate mouse click"""
         if click is None:
             logger.error("Click function requires python-xlib library")
             return
         click(int(button))
-        callable(cb) and cb()
 
-    def trigger(self, rule_name, win=None, cb=None):
+    def trigger(self, rule_name, win=None):
         self.rules[rule_name].then()
-        callable(cb) and cb()
 
-    def enable(self, rule_name, win=None, cb=None):
+    def enable(self, rule_name, win=None):
         self.rules[rule_name].enabled = True
         rebind()
-        callable(cb) and cb()
 
-    def disable(self, rule_name, win=None, cb=None):
+    def disable(self, rule_name, win=None):
         self.rules[rule_name].enabled = False
         rebind()
-        callable(cb) and cb()
 
 
 def rebind(*args):
